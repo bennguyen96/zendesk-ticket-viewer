@@ -11,23 +11,33 @@ class TicketViewer {
 
         Scanner in = new Scanner(System.in);
         Printer printer = new Printer();
+        TicketAPI api = new TicketAPI();
 
-        while (in.hasNext()) {
-            String selection = in.nextLine();
-            if (selection.equals(ALL_TICKETS)) {
-                System.out.println(ALL_TICKETS);
-            } else if (selection.equals(ONE_TICKET)) {
-                System.out.println(ONE_TICKET);
-            } else if (selection.equals(QUIT)) {
-                System.out.println(QUIT);
-            } else {
-                System.out.println("Usage:\n" +
-                        "Select 1 to view all tickets\n" +
-                        "Select 2 to view a ticket\n" +
-                        "Type 'quit' to exit");
-            }
+
+        try {
+            api.connect();
+        } catch (Exception e) {
+
         }
-        System.exit(0);
+
+//        while (in.hasNext()) {
+//            String selection = in.nextLine();
+//            if (selection.equals(ALL_TICKETS)) {
+//
+//            } else if (selection.equals(ONE_TICKET)) {
+//
+//            } else if (selection.equals(QUIT)) {
+//                System.out.println("Exiting");
+//                System.exit(0);
+//
+//            } else {
+//                System.out.println("Usage:\n" +
+//                        "Select 1 to view all tickets\n" +
+//                        "Select 2 to view a ticket\n" +
+//                        "Type 'quit' to exit");
+//            }
+//        }
+//        System.exit(0);
     }
 
     public static void help() {
