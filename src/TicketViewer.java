@@ -15,10 +15,14 @@ class TicketViewer {
 
 
         try {
-            api.connect();
+            api.getAllTickets();
         } catch (Exception e) {
 
         }
+
+        try {
+            api.getTicket(1);
+        } catch (Exception e) {}
 
 //        while (in.hasNext()) {
 //            String selection = in.nextLine();
