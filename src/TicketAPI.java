@@ -12,37 +12,25 @@ import java.util.ArrayList;
 import java.util.Base64;
 
 public class TicketAPI {
-    private final int TICKETS_PER_PAGE = 25;
-    private HttpClient client = HttpClient.newHttpClient();
+    public static final int TICKETS_PER_REQUEST = 25;
     private final String ACC = "bennguyen96@gmail.com:@CP6DWv8xX";
     private final String ENCODED = Base64.getEncoder().encodeToString(ACC.getBytes());
+    private final String URL = String.format("https://bennguyen96.zendesk.com/api/v2/tickets.json?page[size]=%d",
+            TICKETS_PER_REQUEST);
+    private HttpClient client = HttpClient.newHttpClient();
     private final Gson gson = new Gson();
     private final JsonParser jsonParser = new JsonParser();
 
 
-    public ArrayList<Ticket> getAllTickets() throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder(URI.create(
-                String.format("https://bennguyen96.zendesk.com/api/v2/tickets.json?page[size]=%d", TICKETS_PER_PAGE))).
+    public APIResponse getAllTickets() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(URI.create(URL)).
                 header("Authorization", "Basic " + ENCODED).GET().build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // convert response string into json
         JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
         // map to APIResponse object
         APIResponse data = gson.fromJson(jsonResponse, APIResponse.class);
-        // create array to store tickets
-        ArrayList<Ticket> tickets = new ArrayList<Ticket>();
-        // add tickets
-        tickets.addAll(data.getTickets());
-        // fetch tickets until none left
-        while (data.getMeta().has_more == "true") {
-            request = HttpRequest.newBuilder(URI.create(data.getLinks().next)).
-                    header("Authorization", "Basic " + ENCODED).GET().build();
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
-            data = gson.fromJson(jsonResponse, APIResponse.class);
-            tickets.addAll(data.getTickets());
-        }
-        return tickets;
+        return data;
     }
 
     public Ticket getTicket(int id) throws IOException, InterruptedException {
@@ -57,4 +45,14 @@ public class TicketAPI {
         return ticket;
     }
 
+    public APIResponse getAllTickets(String URL) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(URI.create(URL)).
+                header("Authorization", "Basic " + ENCODED).GET().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        // convert response string into json
+        JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
+        // map to APIResponse object
+        APIResponse data = gson.fromJson(jsonResponse, APIResponse.class);
+        return data;
+    }
 }

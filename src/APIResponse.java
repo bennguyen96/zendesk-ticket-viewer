@@ -1,23 +1,15 @@
 import java.util.ArrayList;
 
-class Meta {
-    public String has_more;
-    }
-class Links {
-    public String prev;
-    public String next;
-}
 public class APIResponse {
+
     private ArrayList<Ticket> tickets;
     private Meta meta;
     private Links links;
-    private int count;
 
-    public APIResponse(ArrayList<Ticket> tickets, Meta meta, Links links, int count) {
+    public APIResponse(ArrayList<Ticket> tickets, Meta meta, Links links) {
         this.tickets = tickets;
         this.meta = meta;
         this.links = links;
-        this.count = count;
     }
 
     public Meta getMeta() {
@@ -43,12 +35,14 @@ public class APIResponse {
     public void setTickets(ArrayList<Ticket> tickets) {
         this.tickets = tickets;
     }
+}
 
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
+class Meta {
+    public String has_more;
+    public String before_cursor;
+    public String after_cursor;
+}
+class Links {
+    public String prev;
+    public String next;
 }

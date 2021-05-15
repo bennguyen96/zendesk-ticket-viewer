@@ -10,8 +10,4 @@ public class Ticket {
         this.status = status;
         this.created_at = created_at;
     }
-    @Override
-    public String toString() {
-        return "Ticket " + id + " "+ created_at + " by " + requester_id + ". Status: " + status;
-    }
 }
