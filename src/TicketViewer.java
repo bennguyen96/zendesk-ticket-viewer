@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 class TicketViewer {
@@ -22,8 +23,8 @@ class TicketViewer {
             String selection = in.nextLine();
             if (selection.equals(ALL_TICKETS)) {
                 try {
-                    APIResponse data = api.getAllTickets();
-                    printer.printTickets(data.getTickets());
+                    ArrayList<Ticket> tickets = api.getAllTickets();
+                    printer.printTickets(tickets);
                     // if theres a next page, allow the user to input to retrieve it
                         // if user selects next page, api call and display it
                 } catch (Exception e) {

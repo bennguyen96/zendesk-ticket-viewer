@@ -1,9 +1,11 @@
+import java.util.ArrayList;
+
 public class Printer {
 
     public void printWelcome(){
         System.out.println("Welcome to the Zendesk Ticket Viewer\n");
     }
-    public void printTickets(Ticket[] tickets){
+    public void printTickets(ArrayList<Ticket> tickets){
         for (Ticket ticket : tickets) {
             printTicket(ticket);
         }

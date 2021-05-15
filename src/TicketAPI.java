@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.Base64;
 
 public class TicketAPI {
@@ -19,17 +20,32 @@ public class TicketAPI {
     private final JsonParser jsonParser = new JsonParser();
 
 
-    public APIResponse getAllTickets() throws IOException, InterruptedException {
-        HttpRequest authorization = HttpRequest.newBuilder(URI.create(
+    public ArrayList<Ticket> getAllTickets() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(URI.create(
                 String.format("https://bennguyen96.zendesk.com/api/v2/tickets.json?page[size]=%d", TICKETS_PER_PAGE))).
                 header("Authorization", "Basic " + ENCODED).GET().build();
 
-        HttpResponse<String> response = client.send(authorization, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // convert response string into json
         JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
         // map to APIResponse object
         APIResponse data = gson.fromJson(jsonResponse, APIResponse.class);
-        return data;
+        // create array to store tickets
+        ArrayList<Ticket> tickets = new ArrayList<Ticket>();
+        // add tickets
+        tickets.addAll(data.getTickets());
+        while (data.getMeta().has_more == "true") {
+            request = HttpRequest.newBuilder(URI.create(data.getLinks().next)).
+                    header("Authorization", "Basic " + ENCODED).GET().build();
+
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            // convert response string into json
+            jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
+            // map to APIResponse object
+            data = gson.fromJson(jsonResponse, APIResponse.class);
+            tickets.addAll(data.getTickets());
+        }
+        return tickets;
     }
 
     public Ticket getTicket(int id) throws IOException, InterruptedException {
