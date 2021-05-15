@@ -24,7 +24,6 @@ public class TicketAPI {
         HttpRequest request = HttpRequest.newBuilder(URI.create(
                 String.format("https://bennguyen96.zendesk.com/api/v2/tickets.json?page[size]=%d", TICKETS_PER_PAGE))).
                 header("Authorization", "Basic " + ENCODED).GET().build();
-
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // convert response string into json
         JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
@@ -34,14 +33,12 @@ public class TicketAPI {
         ArrayList<Ticket> tickets = new ArrayList<Ticket>();
         // add tickets
         tickets.addAll(data.getTickets());
+        // fetch tickets until none left
         while (data.getMeta().has_more == "true") {
             request = HttpRequest.newBuilder(URI.create(data.getLinks().next)).
                     header("Authorization", "Basic " + ENCODED).GET().build();
-
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            // convert response string into json
             jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
-            // map to APIResponse object
             data = gson.fromJson(jsonResponse, APIResponse.class);
             tickets.addAll(data.getTickets());
         }
