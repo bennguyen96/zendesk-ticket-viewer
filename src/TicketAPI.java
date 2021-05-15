@@ -11,44 +11,37 @@ import java.net.http.HttpResponse;
 import java.util.Base64;
 
 public class TicketAPI {
-
+    private final int TICKETS_PER_PAGE = 25;
     private HttpClient client = HttpClient.newHttpClient();
     private final String ACC = "bennguyen96@gmail.com:@CP6DWv8xX";
     private final String ENCODED = Base64.getEncoder().encodeToString(ACC.getBytes());
     private final Gson gson = new Gson();
-    public TicketAPI() {
+    private final JsonParser jsonParser = new JsonParser();
 
-    }
 
-    public void getAllTickets() throws IOException, InterruptedException {
-        HttpRequest authorization = HttpRequest.newBuilder(URI.create("https://bennguyen96.zendesk.com/api/v2/tickets.json")).
+    public APIResponse getAllTickets() throws IOException, InterruptedException {
+        HttpRequest authorization = HttpRequest.newBuilder(URI.create(
+                String.format("https://bennguyen96.zendesk.com/api/v2/tickets.json?page[size]=%d", TICKETS_PER_PAGE))).
                 header("Authorization", "Basic " + ENCODED).GET().build();
 
-
         HttpResponse<String> response = client.send(authorization, HttpResponse.BodyHandlers.ofString());
-        String jsonString = response.body();
-        System.out.println(jsonString);
-
-        JsonParser parser = new JsonParser();
-        JsonObject json = parser.parse(jsonString).getAsJsonObject();
-        JsonElement tickets = json.get("tickets");
-        Ticket[] ticketArray = gson.fromJson(tickets, Ticket[].class);
-        for (Ticket ticket: ticketArray) {
-            System.out.println(ticket);
-        }
+        // convert response string into json
+        JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
+        // map to APIResponse object
+        APIResponse data = gson.fromJson(jsonResponse, APIResponse.class);
+        return data;
     }
 
-    public void getTicket(int id) throws IOException, InterruptedException {
+    public Ticket getTicket(int id) throws IOException, InterruptedException {
         HttpRequest authorization = HttpRequest.newBuilder(URI.create(String.format("https://bennguyen96.zendesk.com/api/v2/tickets/%d.json?", id))).
                 header("Authorization", "Basic " + ENCODED).GET().build();
         HttpResponse<String> response = client.send(authorization, HttpResponse.BodyHandlers.ofString());
-        String jsonString = response.body();
-        System.out.println(jsonString);
-        JsonParser parser = new JsonParser();
-        JsonObject json = parser.parse(jsonString).getAsJsonObject();
-        JsonElement result = json.get("ticket");
-        Ticket ticket = gson.fromJson(result, Ticket.class);
-        System.out.println(ticket);
+        // convert response string into json
+        JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
+        // value of ticket field
+        JsonElement ticketJson = jsonResponse.get("ticket");
+        Ticket ticket = gson.fromJson(ticketJson, Ticket.class);
+        return ticket;
     }
 
 }
