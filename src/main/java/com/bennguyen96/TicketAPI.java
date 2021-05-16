@@ -1,3 +1,5 @@
+package com.bennguyen96;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,7 +10,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.Base64;
 
 public class TicketAPI {
@@ -29,8 +30,7 @@ public class TicketAPI {
         // convert response string into json
         JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
         // map to APIResponse object
-        APIResponse data = gson.fromJson(jsonResponse, APIResponse.class);
-        return data;
+        return gson.fromJson(jsonResponse, APIResponse.class);
     }
 
     public Ticket getTicket(int id) throws IOException, InterruptedException {
@@ -41,8 +41,7 @@ public class TicketAPI {
         JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
         // value of ticket field
         JsonElement ticketJson = jsonResponse.get("ticket");
-        Ticket ticket = gson.fromJson(ticketJson, Ticket.class);
-        return ticket;
+        return gson.fromJson(ticketJson, Ticket.class);
     }
 
     public APIResponse getAllTickets(String URL) throws IOException, InterruptedException {
@@ -52,7 +51,6 @@ public class TicketAPI {
         // convert response string into json
         JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
         // map to APIResponse object
-        APIResponse data = gson.fromJson(jsonResponse, APIResponse.class);
-        return data;
+        return gson.fromJson(jsonResponse, APIResponse.class);
     }
 }

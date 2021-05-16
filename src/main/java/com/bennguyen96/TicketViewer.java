@@ -1,8 +1,8 @@
-import java.util.ArrayList;
-import java.util.ListIterator;
+package com.bennguyen96;
+
 import java.util.Scanner;
 
-class TicketViewer {
+public class TicketViewer {
 
     public static final String ALL_TICKETS = "1";
     public static final String ONE_TICKET = "2";

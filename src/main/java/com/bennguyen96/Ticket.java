@@ -1,3 +1,5 @@
+package com.bennguyen96;
+
 public class Ticket {
     public final int id;
     public final String created_at;

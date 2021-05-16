@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+package com.bennguyen96;
 
 public class Printer {
 
@@ -15,6 +15,7 @@ public class Printer {
     public void printPaginationUsage() {
         System.out.println("Type 'prev' for previous page, 'next' for next page or any other key to go back");
     }
+
     public void printTicket(Ticket ticket) {
         System.out.format("#%d created %s by %s. Status: %s \n",
                 ticket.id, ticket.created_at, ticket.requester_id, ticket.status);

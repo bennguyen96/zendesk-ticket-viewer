@@ -1,3 +1,5 @@
+package com.bennguyen96;
+
 import java.util.ArrayList;
 
 public class APIResponse {
