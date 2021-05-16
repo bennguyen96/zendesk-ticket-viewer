@@ -1,6 +1,9 @@
-# Zendesk main.com.bennguyen96.Ticket Viewer
+# Zendesk Ticket Viewer
 
 A Command Line Interface to retrieve a User's tickets.
+
+Prerequisites:
+- Java 11
 
 Instructions:
  - Download JAR file

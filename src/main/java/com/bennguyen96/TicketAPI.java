@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -14,7 +13,7 @@ import java.util.Base64;
 
 public class TicketAPI {
     public static final int TICKETS_PER_REQUEST = 25;
-    private final String ACC = "bennguyen96@gmail.com:@CP6DWv8xX";
+    private final String ACC = "bennguyen96@gmail.com:throaway";
     private final String ENCODED = Base64.getEncoder().encodeToString(ACC.getBytes());
     private final String URL = String.format("https://bennguyen96.zendesk.com/api/v2/tickets.json?page[size]=%d",
             TICKETS_PER_REQUEST);
