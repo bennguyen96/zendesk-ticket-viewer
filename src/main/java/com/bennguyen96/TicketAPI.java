@@ -23,20 +23,33 @@ public class TicketAPI {
     private final JsonParser jsonParser = new JsonParser();
 
 
-    public APIResponse getAllTickets() throws IOException, InterruptedException {
+    public APIResponse getAllTickets() throws Throwable {
         HttpRequest request = HttpRequest.newBuilder(URI.create(URL)).
                 header("Authorization", "Basic " + ENCODED).GET().build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 401) {
+            throw new InvalidAuthorizationException("Could not authenticate, please check credentials");
+        }
+        else if (response.statusCode() != 200) {
+            throw new Throwable("Something went wrong, restart and try again");
+        }
         // convert response string into json
         JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
         // map to APIResponse object
         return gson.fromJson(jsonResponse, APIResponse.class);
     }
 
-    public Ticket getTicket(int id) throws IOException, InterruptedException {
+    public Ticket getTicket(int id) throws Throwable {
         HttpRequest authorization = HttpRequest.newBuilder(URI.create(String.format("https://bennguyen96.zendesk.com/api/v2/tickets/%d.json?", id))).
                 header("Authorization", "Basic " + ENCODED).GET().build();
         HttpResponse<String> response = client.send(authorization, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 404 || response.statusCode() == 400) {
+            throw new InvalidTicketException(String.format("Ticket ID %d does not exist", id));
+        } else if (response.statusCode() == 401) {
+            throw new InvalidAuthorizationException("Could not authenticate, please check credentials");
+        } else if (response.statusCode() != 200) {
+            throw new Throwable("Something went wrong, restart and try again");
+        }
         // convert response string into json
         JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
         // value of ticket field
@@ -44,10 +57,13 @@ public class TicketAPI {
         return gson.fromJson(ticketJson, Ticket.class);
     }
 
-    public APIResponse getAllTickets(String URL) throws IOException, InterruptedException {
+    public APIResponse getAllTickets(String URL) throws Throwable {
         HttpRequest request = HttpRequest.newBuilder(URI.create(URL)).
                 header("Authorization", "Basic " + ENCODED).GET().build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new Throwable("Something went wrong, restart and try again");
+        }
         // convert response string into json
         JsonObject jsonResponse = jsonParser.parse(response.body()).getAsJsonObject();
         // map to APIResponse object

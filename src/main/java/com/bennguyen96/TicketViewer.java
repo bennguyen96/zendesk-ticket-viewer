@@ -10,7 +10,7 @@ public class TicketViewer {
     public static final String NEXT = "next";
     public static final String PREV = "prev";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Throwable {
 
         Scanner in = new Scanner(System.in);
         Printer printer = new Printer();
@@ -43,7 +43,6 @@ public class TicketViewer {
                 }
                 finally {
                     printer.printOptions();
-                    continue;
                 }
             } else if (selection.equals(ONE_TICKET)) {
                 printer.promptForTicket();
@@ -51,12 +50,9 @@ public class TicketViewer {
                 try {
                     Ticket ticket = api.getTicket(ticketID);
                     printer.printTicket(ticket);
+                    printer.printOptions();
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-                finally {
-                    printer.printOptions();
-                    continue;
                 }
             } else if (selection.equals(QUIT)) {
                 printer.printExit();
